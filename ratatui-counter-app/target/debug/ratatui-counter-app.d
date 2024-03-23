@@ -1,0 +1,1 @@
+/home/bano/Projects/TUI-Clones/ratatui-tutorials/ratatui-counter-app/target/debug/ratatui-counter-app: /home/bano/Projects/TUI-Clones/ratatui-tutorials/ratatui-counter-app/src/errors.rs /home/bano/Projects/TUI-Clones/ratatui-tutorials/ratatui-counter-app/src/main.rs /home/bano/Projects/TUI-Clones/ratatui-tutorials/ratatui-counter-app/src/tui.rs
