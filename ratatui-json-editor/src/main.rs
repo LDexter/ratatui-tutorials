@@ -98,6 +98,72 @@ fn run_app<B: Backend>(          // Start method signature across ratatui::backe
 		    }
 		    _ => {}
 		},
+
+		// Handle enter key for moving through edit mode and returning to main
+		CurrentScreen::Editing if key.kind == KeyEventKind::Press => {
+		    match key.code {
+			// Check for Enter key
+			KeyCode::Enter => {
+			    // Check for editing
+			    if let Some(editing) = &app.currently_editing {
+				match editing {
+				    // When on key, move to value
+				    CurrentlyEditing::Key => {
+					app.currently_editing = Some(CurrentlyEditing::Value);
+				    }
+				    // When on value, save pair and return to main screen
+				    CurrentlyEditing::Value => {
+					app.save_key_value();
+					app.current_screen = CurrentScreen::Main;
+				    }
+				}
+			    }
+			}
+
+			// Handle Backspace key for deleting characters
+			KeyCode::Backspace => {
+			    // Check for editing
+			    if let Some(editing) = &app.currently_editing {
+				match editing {
+				    // Delete end characters off either key or value strings
+				    CurrentlyEditing::Key => {
+					app.key_input.pop();
+				    }
+				    CurrentlyEditing::Key => {
+					app.value_input.pop();
+				    }
+				}
+			    }
+			}
+
+			// Handle Escape key to exit edit mode
+			KeyCode::Esc => {
+			    app.current_screen = CurrentScreen::Main;
+			    app.currently_editing = None;
+			}
+			
+			// Swap between key and value
+			KeyCode::Tab => {
+			    app.toggle_editing();
+			}
+
+			// Handle typing valid characters by capturing value of char
+			KeyCode::Char(value) => {
+			    if let Some(editing) = &app.currently_editing {
+				match editing {
+				    CurrentlyEditing::Key => {
+					app.key_input.push(value);
+				    }
+				    CurrentlyEditing::Value => {
+					app.value_input.push(value);
+				    }
+				}
+			    }
+			}
+			_ => {}
+		    }
+		}
+		_ => {}
 	    }
 	}
     }
